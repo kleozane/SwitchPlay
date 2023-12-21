@@ -38,5 +38,35 @@ namespace SwitchPlay.Controllers
             await _categoryService.CreateCategoryAsync(category);
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var category = await _categoryService.GetCategoryAsync(id);
+            var model = new CategoryForModification();
+
+            model.Id = category.Id;
+            model.Name = category.Name;
+            model.Description = category.Description;
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CategoryForModification model)
+        {
+            var category = await _categoryService.GetCategoryAsync(model.Id);
+
+            category.Name = model.Name;
+            category.Description = model.Description;
+
+            await _categoryService.UpdateCategoryAsync(category);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category = await _categoryService.GetCategoryAsync(id);
+            await _categoryService.DeleteCategoryAsync(category.Id);
+            return RedirectToAction("Index");
+        }
     }
 }

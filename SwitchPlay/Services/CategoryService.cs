@@ -16,6 +16,11 @@ namespace SwitchPlay.Services
             await _context.AddAsync(category);
         }
 
+        public async Task UpdateCategoryAsync(Category category)
+        {
+            await _context.UpdateAsync(category);
+        }
+
         public async Task DeleteCategoryAsync(int id)
         {
             await _context.RemoveAsync(id);

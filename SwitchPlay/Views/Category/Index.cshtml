@@ -19,6 +19,7 @@
                                 <tr>
                                     <th>Emer</th>
                                     <th>Pershkrimi</th>
+                                    <th>Veprimet</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -27,6 +28,11 @@
                                     <tr>
                                         <td>@item.Name</td>
                                         <td>@item.Description</td>
+                                        <td>
+                                            <a style="font-size:larger" asp-route-id="@item.Id" asp-action="Edit"><i class="nc-icon nc-settings-tool-66"></i></a>
+                                            &emsp;
+                                            <a style="font-size:larger; color: red" asp-route-id="@item.Id" asp-action="Delete"><i class="nc-icon nc-simple-remove"></i></a>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

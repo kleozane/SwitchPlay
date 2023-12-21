@@ -1,6 +1,6 @@
-﻿@model SwitchPlay.Models.CategoryForCreation
+﻿@model SwitchPlay.Models.CategoryForModification
 @{
-    ViewData["Title"] = "Shto Kategori";
+    ViewData["Title"] = "Ndrysho Kategori";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="card-title pb-2">Shto Kategori</h2>
+                <h2 class="card-title pb-2">Ndrysho Kategori</h2>
             </div>
         </div>
-        <form asp-action="Add" method="post">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
             <div class="row">
                 <div class="col-md-6 px-1">
                     <div class="form-group">
@@ -26,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-info btn-fill pull-right">Ruaj</button>
+            <button asp-action="Edit" style="float:right;" type="submit" class="btn btn-success">Ruaj</button>
             <div class="clearfix"></div>
         </form>
     </div>
