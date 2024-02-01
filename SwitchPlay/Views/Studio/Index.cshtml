@@ -1,6 +1,6 @@
-﻿@model IEnumerable<SwitchPlay.Data.Category>
+﻿@model IEnumerable<SwitchPlay.Data.Studio>
 @{
-    ViewData["Title"] = "Lista e Kategorive";
+    ViewData["Title"] = "Lista e Studiove";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,13 +10,14 @@
             <div class="col-md-12">
                 <div class="card strpied-tabled-with-hover">
                     <div class="card-header">
-                        <h4 class="card-title">Lista e Kategorive</h4>
+                        <h4 class="card-title">Lista e Studiove</h4>
                     </div>
                     <div class="card-body table-full-width table-responsive">
-                        <a asp-action="Add" asp-controller="Category" class="btn btn-outline-primary">Krijo Kategori</a>
+                        <a asp-action="Add" asp-controller="Studio" class="btn btn-outline-primary">Krijo Studio</a>
                         <table class="table table-hover table-striped">
                             <thead>
                                 <tr>
+                                    <th>Logo</th>
                                     <th>Emer</th>
                                     <th>Pershkrimi</th>
                                     <th>Veprimet</th>
@@ -26,6 +27,7 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
+                                        <td><img style="object-fit: cover" width="50" height="50" src="~/img/fotoStudio/@item.Logo" /></td>
                                         <td>@item.Name</td>
                                         <td>@item.Description</td>
                                         <td>

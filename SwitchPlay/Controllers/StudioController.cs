@@ -8,10 +8,13 @@ namespace SwitchPlay.Controllers
     public class StudioController : Controller
     {
         private readonly IStudioService _studioService;
-
-        public StudioController(IStudioService studioService)
+        private readonly IConfiguration _configuration;
+        private readonly IFileHandleService _fileHandleService;
+        public StudioController(IStudioService studioService, IConfiguration configuration, IFileHandleService fileHandleService)
         {
             _studioService = studioService;
+            _configuration = configuration;
+            _fileHandleService = fileHandleService;
         }
 
         public async Task<IActionResult> Index()
@@ -29,16 +32,26 @@ namespace SwitchPlay.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(StudioForCreation model)
         {
-            //var file = HttpContext.Request.Form.Files.FirstOrDefault();
+            var file = HttpContext.Request.Form.Files.FirstOrDefault();
 
             var studio = new Studio
             {
                 Name = model.Name,
                 Description = model.Description,
-                Logo = model.Logo
+                Logo = null
             };
-
             await _studioService.CreateStudioAsync(studio);
+
+            if (file != null)
+            {
+                var studio2 = await _studioService.GetStudioAsync(studio.Id);
+                var uploadDir = _configuration["Uploads:FotoStudio"];
+                var fileName = studio2.Id + "_" + studio2.Name;
+                fileName = await _fileHandleService.UploadAndRenameFileAsync(file, uploadDir, fileName);
+                studio2.Logo = fileName;
+                await _studioService.UpdateStudioAsync(studio2);
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -57,19 +70,35 @@ namespace SwitchPlay.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(StudioForModification model)
         {
+            var file = HttpContext.Request.Form.Files.FirstOrDefault();
+
             var studio = await _studioService.GetStudioAsync(model.Id);
 
             studio.Name = model.Name;
             studio.Description = model.Description;
-            studio.Logo = model.Logo;
 
             await _studioService.UpdateStudioAsync(studio);
+
+            if (file != null)
+            {
+                var uploadDir = _configuration["Uploads:FotoStudio"];
+                var fileName = studio.Id + "_" + studio.Name;
+                fileName = await _fileHandleService.UploadAndRenameFileAsync(file, uploadDir, fileName);
+                studio.Logo = fileName;
+                await _studioService.UpdateStudioAsync(studio);
+            }
+
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Delete(int id)
         {
             var studio = await _studioService.GetStudioAsync(id);
+            if (studio.Logo != null)
+            {
+                var dir = _configuration["Uploads:FotoStudio"];
+                _fileHandleService.RemoveImageFile(dir, studio.Logo);
+            }
             await _studioService.DeleteStudioAsync(studio.Id);
             return RedirectToAction("Index");
         }

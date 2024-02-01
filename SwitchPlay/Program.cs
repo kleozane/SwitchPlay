@@ -21,6 +21,7 @@ builder.Services.AddScoped<StudioRepository>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IPlatformService, PlatformService>();
 builder.Services.AddTransient<IStudioService, StudioService>();
+builder.Services.AddTransient<IFileHandleService, FileHandleService>();
 
 
 
