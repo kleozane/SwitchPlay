@@ -11,6 +11,7 @@ namespace SwitchPlay.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<Studio> Studios { get; set; }
+        public DbSet<Game> Games { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

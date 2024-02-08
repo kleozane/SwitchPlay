@@ -1,0 +1,98 @@
+﻿@model SwitchPlay.Models.GameForCreation
+@{
+    ViewData["Title"] = "Shto Loje";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="card-title pb-2">Shto Loje</h2>
+            </div>
+        </div>
+        <form asp-action="Add" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6 px-1">
+                    <div class="form-group">
+                        <label>Titulli</label>
+                        <input asp-for="Title" type="text" class="form-control" placeholder="Titulli">
+                    </div>
+                </div>
+                <div class="col-md-6 pl-1">
+                    <div class="form-group">
+                        <label>Pershkrimi</label>
+                        <textarea asp-for="Description" type="text" class="form-control" placeholder="Pershkrimi">
+                            </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 px-1">
+                    <div class="form-group">
+                        <label>Cmimi</label>
+                        <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="Cmimi">
+                    </div>
+                </div>
+                <div class="col-md-6 pl-1">
+                    <div class="form-group">
+                        <label>Hapesira ne Memorie</label>
+                        <input asp-for="Size" type="number" step="0.01" class="form-control" placeholder="Hapesira">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 px-1">
+                    <div class="form-group">
+                        <label>Parametrat</label>
+                        <input asp-for="Requirements" type="text" class="form-control" placeholder="Parametrat">
+                    </div>
+                </div>
+                <div class="col-md-6 pl-1">
+                    <div class="form-group">
+                        <label>Data e Publikimit</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="ReleaseDate" class="form-control" id="releaseDate" autocomplete="off">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <span class="fas fa-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 px-1">
+                    <label>Imazh</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input asp-for="Image" type="file" class="custom-file-input" id="inputGroupFile01">
+                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-info btn-fill pull-right">Ruaj</button>
+            <div class="clearfix"></div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css" />
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+
+    <script>
+
+        flatpickr("#releaseDate", {
+            enableTime: true,
+            dateFormat: "d/m/Y",
+            locale: "ru", // Set the locale to handle the dd/mm/yyyy format
+            defaultDate: "today"
+        });
+    </script>
+}
