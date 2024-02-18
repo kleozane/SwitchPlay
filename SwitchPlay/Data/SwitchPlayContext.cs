@@ -12,6 +12,7 @@ namespace SwitchPlay.Data
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<Studio> Studios { get; set; }
         public DbSet<Game> Games { get; set; }
+        public DbSet<StudioCategory> StudioCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,6 +47,20 @@ namespace SwitchPlay.Data
                 Id = 5,
                 Name = "Mobile",
             });
+
+
+
+            builder.Entity<StudioCategory>().HasKey(e => new { e.CategoryId, e.StudioId });
+
+            builder.Entity<StudioCategory>()
+                .HasOne(sc => sc.Studio)
+                .WithMany(s => s.StudioCategories)
+                .HasForeignKey(sc => sc.StudioId);
+
+            builder.Entity<StudioCategory>()
+                .HasOne(sc => sc.Category)
+                .WithMany(c => c.StudioCategories)
+                .HasForeignKey(sc => sc.CategoryId);
         }
        
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SwitchPlay.Data;
+using SwitchPlay.Migrations;
 using SwitchPlay.Models;
 using SwitchPlay.Services;
 
@@ -8,13 +9,19 @@ namespace SwitchPlay.Controllers
     public class StudioController : Controller
     {
         private readonly IStudioService _studioService;
+        private readonly ICategoryService _categoryService;
+        private readonly IStudioCategoryService _studioCategoryService;
+
+
         private readonly IConfiguration _configuration;
         private readonly IFileHandleService _fileHandleService;
-        public StudioController(IStudioService studioService, IConfiguration configuration, IFileHandleService fileHandleService)
+        public StudioController(IStudioService studioService, IStudioCategoryService studioCategoryService, IConfiguration configuration, IFileHandleService fileHandleService, ICategoryService categoryService)
         {
             _studioService = studioService;
             _configuration = configuration;
             _fileHandleService = fileHandleService;
+            _categoryService = categoryService;
+            _studioCategoryService = studioCategoryService;
         }
 
         public async Task<IActionResult> Index()
@@ -25,7 +32,10 @@ namespace SwitchPlay.Controllers
 
         public async Task<IActionResult> Add()
         {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+
             var model = new StudioForCreation();
+            model.Categories = categories;
             return View(model);
         }
 
@@ -42,9 +52,18 @@ namespace SwitchPlay.Controllers
             };
             await _studioService.CreateStudioAsync(studio);
 
+            var studio2 = await _studioService.GetStudioAsync(studio.Id);
+
+            if (model.CategoryIds != null)
+            {
+                foreach (var s in model.CategoryIds)
+                {
+                    await _studioCategoryService.CreateStudioCategoryAsync(studio2.Id, s);
+                }
+            }
+
             if (file != null)
             {
-                var studio2 = await _studioService.GetStudioAsync(studio.Id);
                 var uploadDir = _configuration["Uploads:FotoStudio"];
                 var fileName = studio2.Id + "_" + studio2.Name;
                 fileName = await _fileHandleService.UploadAndRenameFileAsync(file, uploadDir, fileName);
@@ -64,6 +83,8 @@ namespace SwitchPlay.Controllers
             model.Name = studio.Name;
             model.Description = studio.Description;
             model.Logo = studio.Logo;
+            model.Categories = await _categoryService.GetAllCategoriesAsync();
+            model.StudioCategories = await _studioCategoryService.GetByStudioId(studio.Id);
             return View(model);
         }
 
@@ -76,6 +97,14 @@ namespace SwitchPlay.Controllers
 
             studio.Name = model.Name;
             studio.Description = model.Description;
+
+            if (model.CategoryIds != null)
+            {
+                foreach (var s in model.CategoryIds)
+                {
+                    await _studioCategoryService.CreateStudioCategoryAsync(studio.Id, s);
+                }
+            }
 
             await _studioService.UpdateStudioAsync(studio);
 

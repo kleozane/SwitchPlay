@@ -18,12 +18,14 @@ builder.Services.AddScoped<CategeoryRepository>();
 builder.Services.AddScoped<PlatformRepository>();
 builder.Services.AddScoped<StudioRepository>();
 builder.Services.AddScoped<GameRepository>();
+builder.Services.AddScoped<StudioCategoryRepositories>();
 
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IPlatformService, PlatformService>();
 builder.Services.AddTransient<IStudioService, StudioService>();
 builder.Services.AddTransient<IGameService, GameService>();
 builder.Services.AddTransient<IFileHandleService, FileHandleService>();
+builder.Services.AddTransient<IStudioCategoryService, StudioCategoryService>();
 
 
 
