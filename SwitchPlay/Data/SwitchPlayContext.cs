@@ -48,6 +48,8 @@ namespace SwitchPlay.Data
                 Name = "Mobile",
             });
 
+
+
             builder.Entity<StudioCategory>().HasKey(e => new { e.CategoryId, e.StudioId });
 
             builder.Entity<StudioCategory>()
