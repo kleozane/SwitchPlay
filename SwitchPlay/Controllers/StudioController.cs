@@ -56,10 +56,7 @@ namespace SwitchPlay.Controllers
 
             if (model.CategoryIds != null)
             {
-                foreach (var s in model.CategoryIds)
-                {
-                    await _studioCategoryService.CreateStudioCategoryAsync(studio2.Id, s);
-                }
+                await _studioCategoryService.CreateStudioCategoryAsync(studio2.Id, model.CategoryIds);
             }
 
             if (file != null)
@@ -98,13 +95,7 @@ namespace SwitchPlay.Controllers
             studio.Name = model.Name;
             studio.Description = model.Description;
 
-            if (model.CategoryIds != null)
-            {
-                foreach (var s in model.CategoryIds)
-                {
-                    await _studioCategoryService.CreateStudioCategoryAsync(studio.Id, s);
-                }
-            }
+            await _studioCategoryService.CreateStudioCategoryAsync(studio.Id, model.CategoryIds);
 
             await _studioService.UpdateStudioAsync(studio);
 

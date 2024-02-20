@@ -5,7 +5,7 @@ namespace SwitchPlay.Services
 {
     public interface IStudioCategoryService
     {
-        Task CreateStudioCategoryAsync(int studioId, int categoryId);
+        Task CreateStudioCategoryAsync(int studioId, List<int> categoryIds);
         Task<IEnumerable<StudioCategory>> GetByStudioId(int studioId);
     }
 }
