@@ -1,4 +1,6 @@
-﻿namespace SwitchPlay.Data
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SwitchPlay.Data
 {
     public class Game
     {
@@ -10,5 +12,12 @@
         public string Requirements { get; set; }
         public double Size { get; set; }
         public DateTime ReleaseDate { get; set; }
+
+        [ForeignKey("StudioId")]
+        public int? StudioId { get; set; }
+        public virtual Studio Studio { get; set; }
+
+        public ICollection<GameCategory> GameCategories { get; set; }
+        public ICollection<GamePlatform> GamePlatforms { get; set; }
     }
 }

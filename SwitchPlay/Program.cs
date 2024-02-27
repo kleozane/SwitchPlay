@@ -19,6 +19,8 @@ builder.Services.AddScoped<PlatformRepository>();
 builder.Services.AddScoped<StudioRepository>();
 builder.Services.AddScoped<GameRepository>();
 builder.Services.AddScoped<StudioCategoryRepositories>();
+builder.Services.AddScoped<GameCategoryRepository>();
+builder.Services.AddScoped<GamePlatformRepository>();
 
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IPlatformService, PlatformService>();
@@ -26,6 +28,8 @@ builder.Services.AddTransient<IStudioService, StudioService>();
 builder.Services.AddTransient<IGameService, GameService>();
 builder.Services.AddTransient<IFileHandleService, FileHandleService>();
 builder.Services.AddTransient<IStudioCategoryService, StudioCategoryService>();
+builder.Services.AddTransient<IGameCategoryService, GameCategoryService>();
+builder.Services.AddTransient<IGamePlatformService, GamePlatformService>();
 
 
 

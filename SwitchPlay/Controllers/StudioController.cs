@@ -54,10 +54,8 @@ namespace SwitchPlay.Controllers
 
             var studio2 = await _studioService.GetStudioAsync(studio.Id);
 
-            if (model.CategoryIds != null)
-            {
-                await _studioCategoryService.CreateStudioCategoryAsync(studio2.Id, model.CategoryIds);
-            }
+            await _studioCategoryService.CreateStudioCategoryAsync(studio2.Id, model.CategoryIds);
+
 
             if (file != null)
             {

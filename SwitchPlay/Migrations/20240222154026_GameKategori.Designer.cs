@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwitchPlay.Data;
 
@@ -11,9 +12,11 @@ using SwitchPlay.Data;
 namespace SwitchPlay.Migrations
 {
     [DbContext(typeof(SwitchPlayContext))]
-    partial class SwitchPlayContextModelSnapshot : ModelSnapshot
+    [Migration("20240222154026_GameKategori")]
+    partial class GameKategori
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,16 +74,11 @@ namespace SwitchPlay.Migrations
                     b.Property<double>("Size")
                         .HasColumnType("float");
 
-                    b.Property<int?>("StudioId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StudioId");
 
                     b.ToTable("Games");
                 });
@@ -98,21 +96,6 @@ namespace SwitchPlay.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("GameCategories");
-                });
-
-            modelBuilder.Entity("SwitchPlay.Data.GamePlatform", b =>
-                {
-                    b.Property<int>("PlatformId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PlatformId", "GameId");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("GamePlatforms");
                 });
 
             modelBuilder.Entity("SwitchPlay.Data.Platform", b =>
@@ -198,16 +181,6 @@ namespace SwitchPlay.Migrations
                     b.ToTable("StudioCategories");
                 });
 
-            modelBuilder.Entity("SwitchPlay.Data.Game", b =>
-                {
-                    b.HasOne("SwitchPlay.Data.Studio", "Studio")
-                        .WithMany("Games")
-                        .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Studio");
-                });
-
             modelBuilder.Entity("SwitchPlay.Data.GameCategory", b =>
                 {
                     b.HasOne("SwitchPlay.Data.Category", "Category")
@@ -225,25 +198,6 @@ namespace SwitchPlay.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("SwitchPlay.Data.GamePlatform", b =>
-                {
-                    b.HasOne("SwitchPlay.Data.Game", "Game")
-                        .WithMany("GamePlatforms")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SwitchPlay.Data.Platform", "Platform")
-                        .WithMany("GamePlatforms")
-                        .HasForeignKey("PlatformId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-
-                    b.Navigation("Platform");
                 });
 
             modelBuilder.Entity("SwitchPlay.Data.StudioCategory", b =>
@@ -275,19 +229,10 @@ namespace SwitchPlay.Migrations
             modelBuilder.Entity("SwitchPlay.Data.Game", b =>
                 {
                     b.Navigation("GameCategories");
-
-                    b.Navigation("GamePlatforms");
-                });
-
-            modelBuilder.Entity("SwitchPlay.Data.Platform", b =>
-                {
-                    b.Navigation("GamePlatforms");
                 });
 
             modelBuilder.Entity("SwitchPlay.Data.Studio", b =>
                 {
-                    b.Navigation("Games");
-
                     b.Navigation("StudioCategories");
                 });
 #pragma warning restore 612, 618

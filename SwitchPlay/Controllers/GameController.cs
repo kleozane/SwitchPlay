@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SwitchPlay.Data;
+using SwitchPlay.Migrations;
 using SwitchPlay.Models;
 using SwitchPlay.Services;
 using System.Data;
@@ -9,13 +10,23 @@ namespace SwitchPlay.Controllers
     public class GameController : Controller
     {
         private readonly IGameService _gameService;
+        private readonly ICategoryService _categoryService;
+        private readonly IStudioService _studioService;
+        private readonly IPlatformService _platformService;
+        private readonly IGameCategoryService _gameCategoryService;
+        private readonly IGamePlatformService _gamePlatformService;
         private readonly IConfiguration _configuration;
         private readonly IFileHandleService _fileHandleService;
-        public GameController(IGameService gameService, IConfiguration configuration, IFileHandleService fileHandleService)
+        public GameController(IGameService gameService, IStudioService studioService, IConfiguration configuration, IFileHandleService fileHandleService, ICategoryService categoryService, IGameCategoryService gameCategoryService, IGamePlatformService gamePlatformService, IPlatformService platformService)
         {
             _gameService = gameService;
+            _studioService = studioService;
             _configuration = configuration;
             _fileHandleService = fileHandleService;
+            _categoryService = categoryService;
+            _gameCategoryService = gameCategoryService;
+            _gamePlatformService = gamePlatformService;
+            _platformService = platformService;
         }
 
         public async Task<IActionResult> Index()
@@ -26,7 +37,14 @@ namespace SwitchPlay.Controllers
 
         public async Task<IActionResult> Add()
         {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            var platforms = await _platformService.GetAllPlatformsAsync();
+            var studios = await _studioService.GetAllStudiosAsync();
+
             var model = new GameForCreation();
+            model.Categories = categories;
+            model.Platforms = platforms;
+            model.Studios = studios;
             return View(model);
         }
 
@@ -43,10 +61,13 @@ namespace SwitchPlay.Controllers
                 Price = model.Price,
                 Requirements = model.Requirements,
                 Size = model.Size,
+                StudioId = model.StudioId,
                 ReleaseDate = DateTime.ParseExact(model.ReleaseDate, "dd/MM/yyyy", null)
-
-        };
+            };
             await _gameService.CreateGameAsync(game);
+
+            await _gameCategoryService.CreateGameCategoryAsync(game.Id, model.CategoryIds);
+            await _gamePlatformService.CreateGamePlatformAsync(game.Id, model.PlatformIds);
 
             if (file != null)
             {
@@ -74,6 +95,12 @@ namespace SwitchPlay.Controllers
             model.Requirements = game.Requirements;
             model.Size = game.Size;
             model.ReleaseDate = game.ReleaseDate.ToString("dd/MM/yyyy");
+            model.Categories = await _categoryService.GetAllCategoriesAsync();
+            model.GameCategories = await _gameCategoryService.GetByGameId(game.Id);
+            model.Platforms = await _platformService.GetAllPlatformsAsync();
+            model.GamePlatforms = await _gamePlatformService.GetByGameId(game.Id);
+            model.Studios = await _studioService.GetAllStudiosAsync();
+            model.SelectedStudioId = game.StudioId;
             return View(model);
         }
 
@@ -88,9 +115,13 @@ namespace SwitchPlay.Controllers
             game.Price = model.Price;
             game.Requirements = model.Requirements;
             game.Size = model.Size;
+            game.StudioId = model.StudioId;
             game.ReleaseDate = DateTime.ParseExact(model.ReleaseDate, "dd/MM/yyyy", null);
 
+            await _gameCategoryService.CreateGameCategoryAsync(game.Id, model.CategoryIds);
+            await _gamePlatformService.CreateGamePlatformAsync(game.Id, model.PlatformIds);
             await _gameService.UpdateGameAsync(game);
+            
 
             if (file != null)
             {
